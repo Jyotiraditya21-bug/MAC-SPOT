@@ -33,7 +33,7 @@ Your AI-powered developer assistant in the terminal — powered by Gemini. Desig
 You can install `mac-spot` globally on any Mac with a single command:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/yourname/mac-spot/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/Jyotiraditya21-bug/MAC-SPOT/main/install.sh | bash
 ```
 
 Once the installation finishes, reload your terminal profile and configure your API key:

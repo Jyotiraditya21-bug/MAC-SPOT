@@ -14,7 +14,7 @@ if [ -d "$INSTALL_DIR" ]; then
 fi
 
 # Clone the repository
-git clone https://github.com/yourname/mac-spot.git "$INSTALL_DIR"
+git clone https://github.com/Jyotiraditya21-bug/MAC-SPOT.git "$INSTALL_DIR"
 cd "$INSTALL_DIR"
 
 # Create a virtual environment
