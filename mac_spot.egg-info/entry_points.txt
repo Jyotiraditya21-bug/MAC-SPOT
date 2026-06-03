@@ -1,0 +1,2 @@
+[console_scripts]
+mac-spot = mac_spot.cli:app
