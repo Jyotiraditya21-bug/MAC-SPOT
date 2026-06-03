@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAC-SPOT — AI-Powered Developer Assistant for macOS</title>
+    <meta name="description" content="MAC-SPOT is a terminal-based AI assistant built for GenAI engineers and developers on macOS, powered by Gemini. Optimize local models, write code, explain errors, and more.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <!-- Apple Gradient Blur Spheres -->
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <header id="home" class="hero">
+            <div class="badge">macOS Native</div>
+            <h1>MAC-SPOT</h1>
+            <p class="subtitle">Your AI-Powered Terminal Developer Assistant — Custom-Built for Apple Silicon</p>
+            
+            <!-- Install Card -->
+            <div class="install-card">
+                <code id="install-cmd">curl -sL https://tinyurl.com/289km8xg | bash</code>
+                <button id="copy-btn" class="copy-button" aria-label="Copy installation command">
+                    <svg class="copy-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <span class="tooltip">Copy to Clipboard</span>
+                </button>
+            </div>
+            
+            <p class="install-note">Runs in a sandboxed environment. Configures global aliases automatically.</p>
+        </header>
+
+        <!-- Terminal Section -->
+        <section id="try" class="terminal-section">
+            <h2 class="section-title">Experience the CLI Right Here</h2>
+            <p class="section-desc">Click any command on the left to watch MAC-SPOT run it in the simulated macOS Terminal in real-time.</p>
+            
+            <div class="terminal-container">
+                <!-- Commands Sidebar -->
+                <div class="terminal-sidebar">
+                    <h3>Subcommands</h3>
+                    <ul>
+                        <li><button class="cmd-btn active" data-cmd="help"><span>ms --help</span><span class="cmd-tag">Help</span></button></li>
+                        <li><button class="cmd-btn" data-cmd="mac"><span>spot mac --model llama-3-8b</span><span class="cmd-tag spec">Core Limit</span></button></li>
+                        <li><button class="cmd-btn" data-cmd="learn"><span>spot learn "RAG"</span><span class="cmd-tag">Learn</span></button></li>
+                        <li><button class="cmd-btn" data-cmd="git"><span>spot git --commit</span><span class="cmd-tag">Git Helper</span></button></li>
+                        <li><button class="cmd-btn" data-cmd="chat"><span>ms chat</span><span class="cmd-tag">REPL Mode</span></button></li>
+                    </ul>
+                </div>
+                
+                <!-- Terminal Window -->
+                <div class="terminal-window">
+                    <div class="terminal-header">
+                        <div class="window-buttons">
+                            <span class="win-btn close"></span>
+                            <span class="win-btn minimize"></span>
+                            <span class="win-btn expand"></span>
+                        </div>
+                        <div class="window-title">mac-spot — zsh</div>
+                    </div>
+                    <div class="terminal-body" id="terminal-body">
+                        <!-- Terminal content will be injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Grid -->
+        <section id="features" class="features-section">
+            <h2 class="section-title">Features Built for macOS Power Users</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">💻</div>
+                    <h3>Apple Silicon Aware</h3>
+                    <p>Profiles your processor (M1/M2/M3/M4), cores count, and RAM size, then instructs how to compile runtimes (like llama.cpp) and set environment configs perfectly.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Model Quant Sizing</h3>
+                    <p>Inputs a model name, computes memory budgets across FP16, Q8, and Q4 formats, and predicts if it fits safely in your Unified Memory alongside cache buffers.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Core Efficiency Logic</h3>
+                    <p>Detects performance vs efficiency cores on macOS SoC, recommending exactly how many threads to allocate to maximize throughput and prevent E-core lag.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>Interactive REPL</h3>
+                    <p>Initiates conversations using memory structures. Supports internal slash commands like <code>/copy</code>, <code>/clear</code>, and <code>/exit</code> directly inside the prompt.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛠️</div>
+                    <h3>Git Conventional Helper</h3>
+                    <p>Runs local diffs via subprocesses, generating conventional commits or Pull Request descriptions formatted in structured Markdown.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Dynamic Cheatsheets</h3>
+                    <p>Retrieves structured cheatsheets dynamically from Gemini for LangChain, MLX, PyTorch, Pytest, Docker, and more, avoiding outdated templates.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- macOS Dock Navigation -->
+    <nav class="dock-container">
+        <div class="dock">
+            <a href="#home" class="dock-item" data-title="Home">
+                <span class="dock-icon">🏠</span>
+            </a>
+            <a href="#try" class="dock-item" data-title="Interactive CLI">
+                <span class="dock-icon">📟</span>
+            </a>
+            <a href="#features" class="dock-item" data-title="Features">
+                <span class="dock-icon">⚙️</span>
+            </a>
+            <a href="https://github.com/Jyotiraditya21-bug/MAC-SPOT" target="_blank" class="dock-item" data-title="GitHub Repository">
+                <span class="dock-icon">🐙</span>
+            </a>
+        </div>
+    </nav>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,566 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+:root {
+    --bg-color: #080a10;
+    --card-bg: rgba(255, 255, 255, 0.04);
+    --card-border: rgba(255, 255, 255, 0.06);
+    --glass-bg: rgba(18, 20, 32, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --primary: #06b6d4; /* Cyan */
+    --primary-glow: rgba(6, 182, 212, 0.15);
+    --accent: #a855f7; /* Purple */
+    --accent-glow: rgba(168, 85, 247, 0.15);
+    --success: #10b981; /* Green */
+    --warning: #f59e0b; /* Yellow */
+    --error: #ef4444; /* Red */
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* Background Glow Orbs */
+.glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(150px);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.12;
+    animation: pulse 12s infinite alternate;
+}
+
+.orb-1 {
+    width: 600px;
+    height: 600px;
+    background: var(--primary);
+    top: -200px;
+    left: -100px;
+}
+
+.orb-2 {
+    width: 500px;
+    height: 500px;
+    background: var(--accent);
+    top: 30%;
+    right: -100px;
+    animation-delay: 2s;
+}
+
+.orb-3 {
+    width: 700px;
+    height: 700px;
+    background: #3b82f6; /* Blue */
+    bottom: -300px;
+    left: 20%;
+    animation-delay: 4s;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.15) translate(30px, 30px); }
+}
+
+/* Layout container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Hero Section */
+.hero {
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 100px 0 60px;
+}
+
+.badge {
+    background: rgba(6, 182, 212, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    color: var(--primary);
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    backdrop-filter: blur(10px);
+}
+
+.hero h1 {
+    font-size: 4.8rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #ffffff 30%, #a5f3fc 70%, var(--primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+    line-height: 1.1;
+}
+
+.subtitle {
+    font-size: 1.4rem;
+    color: var(--text-muted);
+    max-width: 650px;
+    font-weight: 300;
+    margin-bottom: 48px;
+}
+
+/* Install Card */
+.install-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    padding: 14px 24px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    max-width: 100%;
+    margin-bottom: 18px;
+    transition: border-color 0.3s;
+}
+
+.install-card:hover {
+    border-color: rgba(6, 182, 212, 0.3);
+}
+
+.install-card code {
+    font-family: 'Fira Code', monospace;
+    font-size: 1rem;
+    color: #e2e8f0;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+.copy-button {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s, transform 0.1s;
+}
+
+.copy-button:hover {
+    color: var(--primary);
+    transform: scale(1.05);
+}
+
+.copy-button:active {
+    transform: scale(0.95);
+}
+
+.tooltip {
+    position: absolute;
+    bottom: 140%;
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    font-family: 'Outfit', sans-serif;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.copy-button:hover .tooltip {
+    opacity: 1;
+}
+
+.install-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Terminal Section */
+.terminal-section {
+    padding: 80px 0;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+}
+
+.section-desc {
+    color: var(--text-muted);
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 48px;
+    font-size: 1.1rem;
+    font-weight: 300;
+}
+
+/* Terminal Container & Layout */
+.terminal-container {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-radius: 24px;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    height: 520px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255,255,255,0.15);
+}
+
+/* Sidebar List */
+.terminal-sidebar {
+    background: rgba(10, 12, 22, 0.45);
+    border-right: 1px solid var(--glass-border);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.terminal-sidebar h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 18px;
+    font-weight: 600;
+}
+
+.terminal-sidebar ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cmd-btn {
+    width: 100%;
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    padding: 12px 14px;
+    text-align: left;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.cmd-btn:hover {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-main);
+}
+
+.cmd-btn.active {
+    background: rgba(6, 182, 212, 0.08);
+    border-color: rgba(6, 182, 212, 0.25);
+    color: var(--primary);
+}
+
+.cmd-tag {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.7rem;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-muted);
+    padding: 2px 6px;
+    border-radius: 4px;
+    align-self: flex-start;
+    font-weight: 500;
+}
+
+.cmd-btn.active .cmd-tag {
+    background: rgba(6, 182, 212, 0.15);
+    color: var(--primary);
+}
+
+.cmd-tag.spec {
+    background: rgba(168, 85, 247, 0.15);
+    color: var(--accent);
+}
+
+.cmd-btn.active .cmd-tag.spec {
+    background: rgba(168, 85, 247, 0.25);
+    color: #c084fc;
+}
+
+/* Terminal Window */
+.terminal-window {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.terminal-header {
+    background: rgba(15, 17, 28, 0.5);
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.window-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.win-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.win-btn.close { background: var(--error); }
+.win-btn.minimize { background: var(--warning); }
+.win-btn.expand { background: var(--success); }
+
+.window-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Terminal Screen Content */
+.terminal-body {
+    flex: 1;
+    padding: 24px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    overflow-y: auto;
+    background: rgba(8, 9, 15, 0.95);
+    color: #e2e8f0;
+}
+
+.terminal-prompt {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.terminal-input-line {
+    margin-bottom: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.cursor {
+    display: inline-block;
+    width: 8px;
+    height: 15px;
+    background: var(--text-main);
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+.terminal-output {
+    margin-bottom: 18px;
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+
+/* Rich panels mock inside html terminal */
+.mock-panel {
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    padding: 14px;
+    margin: 10px 0;
+    background: rgba(6, 182, 212, 0.02);
+}
+
+.mock-panel-title {
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.table-header {
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    padding-bottom: 6px;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+/* Features Grid */
+.features-section {
+    padding: 80px 0 160px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.feature-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 36px;
+    border-radius: 20px;
+    transition: transform 0.3s, border-color 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.feature-icon {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+}
+
+.feature-card h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.feature-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 300;
+}
+
+/* macOS Navigation Dock */
+.dock-container {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: none; /* Let clicks pass outside the dock */
+}
+
+.dock {
+    display: flex;
+    background: rgba(18, 20, 32, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(35px) saturate(200%);
+    -webkit-backdrop-filter: blur(35px) saturate(200%);
+    padding: 8px 12px;
+    border-radius: 24px;
+    gap: 12px;
+    align-items: flex-end;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+    pointer-events: auto; /* Enable clicks inside the dock */
+}
+
+.dock-item {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: width 0.2s, height 0.2s, margin 0.2s, background 0.2s;
+    cursor: pointer;
+}
+
+.dock-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+    width: 60px;
+    height: 60px;
+    margin: 0 4px -6px; /* Offset to keep bottom aligned */
+}
+
+.dock-icon {
+    font-size: 1.6rem;
+    transition: font-size 0.2s;
+}
+
+.dock-item:hover .dock-icon {
+    font-size: 2.2rem;
+}
+
+/* Tooltip on Dock Item */
+.dock-item::after {
+    content: attr(data-title);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease-out;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.dock-item:hover::after {
+    opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .terminal-container {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    
+    .terminal-sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--glass-border);
+        max-height: 180px;
+        overflow-y: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 3.2rem;
+    }
+    
+    .subtitle {
+        font-size: 1.1rem;
+    }
+}
