@@ -26,13 +26,18 @@ echo "Installing requirements..."
 ./.venv/bin/pip install -q -e .
 
 # Add alias to ~/.zshrc if it doesn't already exist
-ALIAS_LINE='alias mac-spot="'$INSTALL_DIR'/.venv/bin/mac-spot"'
+ALIAS_LINE_MAIN='alias mac-spot="'$INSTALL_DIR'/.venv/bin/mac-spot"'
+ALIAS_LINE_MS='alias ms="'$INSTALL_DIR'/.venv/bin/mac-spot"'
+ALIAS_LINE_SPOT='alias spot="'$INSTALL_DIR'/.venv/bin/mac-spot"'
+
 if ! grep -q "alias mac-spot=" ~/.zshrc 2>/dev/null; then
     echo "" >> ~/.zshrc
-    echo "$ALIAS_LINE" >> ~/.zshrc
-    echo "✔ Added global 'mac-spot' alias to ~/.zshrc"
+    echo "$ALIAS_LINE_MAIN" >> ~/.zshrc
+    echo "$ALIAS_LINE_MS" >> ~/.zshrc
+    echo "$ALIAS_LINE_SPOT" >> ~/.zshrc
+    echo "✔ Added global 'mac-spot', 'ms', and 'spot' aliases to ~/.zshrc"
 else
-    echo "✔ Global alias is already configured in ~/.zshrc"
+    echo "✔ Global aliases are already configured in ~/.zshrc"
 fi
 
 echo ""
