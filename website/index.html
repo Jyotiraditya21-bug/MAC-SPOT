@@ -12,118 +12,258 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <!-- macOS Top Menu Bar -->
+    <nav class="menubar">
+        <div class="menu-left">
+            <span class="menu-item apple-logo" id="apple-logo-btn"></span>
+            <span class="menu-item bold">Finder</span>
+            <span class="menu-item">File</span>
+            <span class="menu-item">Edit</span>
+            <span class="menu-item">View</span>
+            <span class="menu-item">Go</span>
+            <span class="menu-item">Window</span>
+            <span class="menu-item">Help</span>
+        </div>
+        <div class="menu-right">
+            <span class="menu-icon">📶</span>
+            <span class="menu-icon">🔋</span>
+            <span class="menu-icon">🔍</span>
+            <span class="menu-icon">🎛️</span>
+            <span class="menu-item" id="time-display">Thu 12:00 PM</span>
+        </div>
+        
+        <!-- Apple Logo Dropdown -->
+        <div class="apple-dropdown" id="apple-dropdown">
+            <button class="dropdown-item" id="about-trigger">About MAC-SPOT</button>
+            <div class="dropdown-separator"></div>
+            <button class="dropdown-item">System Settings...</button>
+            <button class="dropdown-item">App Store...</button>
+            <div class="dropdown-separator"></div>
+            <button class="dropdown-item" onclick="location.reload();">Force Restart</button>
+        </div>
+    </nav>
+
     <!-- Apple Gradient Blur Spheres -->
     <div class="glow-orb orb-1"></div>
     <div class="glow-orb orb-2"></div>
     <div class="glow-orb orb-3"></div>
 
-    <div class="container">
-        <!-- Hero Section -->
-        <header id="home" class="hero">
-            <div class="badge">macOS Native</div>
-            <h1>MAC-SPOT</h1>
-            <p class="subtitle">Your AI-Powered Terminal Developer Assistant — Custom-Built for Apple Silicon</p>
-            
-            <!-- Install Card -->
-            <div class="install-card">
-                <code id="install-cmd">curl -sL https://tinyurl.com/289km8xg | bash</code>
-                <button id="copy-btn" class="copy-button" aria-label="Copy installation command">
-                    <svg class="copy-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                    <span class="tooltip">Copy to Clipboard</span>
-                </button>
+    <!-- Main Desktop Workspace -->
+    <main class="desktop-workspace">
+        
+        <!-- About This Mac Window (Modal) -->
+        <div class="mac-window draggable-window" id="about-window" style="display: none; top: 120px; left: 100px;">
+            <div class="window-header" id="about-header">
+                <div class="window-buttons">
+                    <button class="win-btn close" id="about-close-btn"></button>
+                    <button class="win-btn minimize"></button>
+                    <button class="win-btn expand"></button>
+                </div>
+                <div class="window-title">About This Mac</div>
             </div>
-            
-            <p class="install-note">Runs in a sandboxed environment. Configures global aliases automatically.</p>
-        </header>
+            <div class="about-body">
+                <div class="mac-display-graphic">
+                    <svg viewBox="0 0 100 80" width="80" height="64">
+                        <defs>
+                            <linearGradient id="macGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#06b6d4" />
+                                <stop offset="100%" stop-color="#a855f7" />
+                            </linearGradient>
+                        </defs>
+                        <rect x="10" y="5" width="80" height="54" rx="6" fill="url(#macGrad)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                        <rect x="15" y="10" width="70" height="44" rx="2" fill="#080a10"/>
+                        <path d="M40,59 L60,59 L55,72 L45,72 Z" fill="#4b5563"/>
+                        <rect x="35" y="72" width="30" height="3" fill="#374151" rx="1"/>
+                    </svg>
+                </div>
+                <div class="mac-specs">
+                    <h2>MAC-SPOT</h2>
+                    <p class="specs-version">Version 1.0.0</p>
+                    <div class="specs-separator"></div>
+                    <p class="spec-line"><strong>Chip</strong> Apple M1</p>
+                    <p class="spec-line"><strong>Memory</strong> 8 GB Unified Memory</p>
+                    <p class="spec-line"><strong>Cores</strong> 8 CPU (4 Perf / 4 Eff)</p>
+                    <p class="spec-line"><strong>Graphics</strong> 8-Core Metal GPU</p>
+                    <p class="spec-line"><strong>Serial Number</strong> MS2026SPOT</p>
+                </div>
+            </div>
+        </div>
 
-        <!-- Terminal Section -->
-        <section id="try" class="terminal-section">
-            <h2 class="section-title">Experience the CLI Right Here</h2>
-            <p class="section-desc">Click any command on the left to watch MAC-SPOT run it in the simulated macOS Terminal in real-time.</p>
-            
-            <div class="terminal-container">
-                <!-- Commands Sidebar -->
-                <div class="terminal-sidebar">
-                    <h3>Subcommands</h3>
-                    <ul>
-                        <li><button class="cmd-btn active" data-cmd="help"><span>ms --help</span><span class="cmd-tag">Help</span></button></li>
-                        <li><button class="cmd-btn" data-cmd="mac"><span>spot mac --model llama-3-8b</span><span class="cmd-tag spec">Core Limit</span></button></li>
-                        <li><button class="cmd-btn" data-cmd="learn"><span>spot learn "RAG"</span><span class="cmd-tag">Learn</span></button></li>
-                        <li><button class="cmd-btn" data-cmd="git"><span>spot git --commit</span><span class="cmd-tag">Git Helper</span></button></li>
-                        <li><button class="cmd-btn" data-cmd="chat"><span>ms chat</span><span class="cmd-tag">REPL Mode</span></button></li>
-                    </ul>
+        <div class="container">
+            <!-- Hero Section -->
+            <header id="home" class="hero">
+                <div class="badge">macOS Native</div>
+                <h1>MAC-SPOT</h1>
+                <p class="subtitle">Your AI-Powered Terminal Assistant — Custom-Built for Apple Silicon</p>
+                
+                <!-- Install Card -->
+                <div class="install-card">
+                    <code id="install-cmd">curl -sL https://tinyurl.com/289km8xg | bash</code>
+                    <button id="copy-btn" class="copy-button" aria-label="Copy installation command">
+                        <svg class="copy-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <span class="tooltip">Copy to Clipboard</span>
+                    </button>
                 </div>
                 
-                <!-- Terminal Window -->
-                <div class="terminal-window">
-                    <div class="terminal-header">
-                        <div class="window-buttons">
-                            <span class="win-btn close"></span>
-                            <span class="win-btn minimize"></span>
-                            <span class="win-btn expand"></span>
+                <p class="install-note">Runs globally in Zsh. Configures short aliases automatically.</p>
+            </header>
+
+            <!-- Terminal Section -->
+            <section id="try" class="terminal-section">
+                <h2 class="section-title">Experience the CLI</h2>
+                <p class="section-desc">Click any command on the left to watch MAC-SPOT run it in the simulated macOS Terminal in real-time.</p>
+                
+                <div class="terminal-container">
+                    <!-- Commands Sidebar -->
+                    <div class="terminal-sidebar">
+                        <h3>Subcommands</h3>
+                        <ul>
+                            <li><button class="cmd-btn active" data-cmd="help"><span>ms --help</span><span class="cmd-tag">Help</span></button></li>
+                            <li><button class="cmd-btn" data-cmd="mac"><span>spot mac --model llama-3-8b</span><span class="cmd-tag spec">Core Limit</span></button></li>
+                            <li><button class="cmd-btn" data-cmd="learn"><span>spot learn "RAG"</span><span class="cmd-tag">Learn</span></button></li>
+                            <li><button class="cmd-btn" data-cmd="git"><span>spot git --commit</span><span class="cmd-tag">Git Helper</span></button></li>
+                            <li><button class="cmd-btn" data-cmd="chat"><span>ms chat</span><span class="cmd-tag">REPL Mode</span></button></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Terminal Window -->
+                    <div class="terminal-window draggable-window" id="terminal-window" style="position: relative;">
+                        <div class="window-header" id="terminal-header">
+                            <div class="window-buttons">
+                                <button class="win-btn close" id="term-close-btn"></button>
+                                <button class="win-btn minimize"></button>
+                                <button class="win-btn expand"></button>
+                            </div>
+                            <div class="window-title">mac-spot — zsh</div>
                         </div>
-                        <div class="window-title">mac-spot — zsh</div>
+                        <div class="terminal-body" id="terminal-body">
+                            <!-- Terminal content will be injected here -->
+                        </div>
                     </div>
-                    <div class="terminal-body" id="terminal-body">
-                        <!-- Terminal content will be injected here -->
+                </div>
+            </section>
+
+            <!-- Features Grid -->
+            <section id="features" class="features-section">
+                <h2 class="section-title">Features Built for macOS Power Users</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">💻</div>
+                        <h3>Apple Silicon Aware</h3>
+                        <p>Profiles your processor (M1/M2/M3/M4), cores count, and RAM size, then instructs how to compile runtimes (like llama.cpp) and set environment configs perfectly.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🧠</div>
+                        <h3>Model Quant Sizing</h3>
+                        <p>Inputs a model name, computes memory budgets across FP16, Q8, and Q4 formats, and predicts if it fits safely in your Unified Memory alongside cache buffers.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Core Efficiency Logic</h3>
+                        <p>Detects performance vs efficiency cores on macOS SoC, recommending exactly how many threads to allocate to maximize throughput and prevent E-core lag.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💬</div>
+                        <h3>Interactive REPL</h3>
+                        <p>Initiates conversations using memory structures. Supports internal slash commands like <code>/copy</code>, <code>/clear</code>, and <code>/exit</code> directly inside the prompt.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🛠️</div>
+                        <h3>Git Conventional Helper</h3>
+                        <p>Runs local diffs via subprocesses, generating conventional commits or Pull Request descriptions formatted in structured Markdown.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📚</div>
+                        <h3>Dynamic Cheatsheets</h3>
+                        <p>Retrieves structured cheatsheets dynamically from Gemini for LangChain, MLX, PyTorch, Pytest, Docker, and more, avoiding outdated templates.</p>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
+    </main>
 
-        <!-- Features Grid -->
-        <section id="features" class="features-section">
-            <h2 class="section-title">Features Built for macOS Power Users</h2>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">💻</div>
-                    <h3>Apple Silicon Aware</h3>
-                    <p>Profiles your processor (M1/M2/M3/M4), cores count, and RAM size, then instructs how to compile runtimes (like llama.cpp) and set environment configs perfectly.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🧠</div>
-                    <h3>Model Quant Sizing</h3>
-                    <p>Inputs a model name, computes memory budgets across FP16, Q8, and Q4 formats, and predicts if it fits safely in your Unified Memory alongside cache buffers.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Core Efficiency Logic</h3>
-                    <p>Detects performance vs efficiency cores on macOS SoC, recommending exactly how many threads to allocate to maximize throughput and prevent E-core lag.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💬</div>
-                    <h3>Interactive REPL</h3>
-                    <p>Initiates conversations using memory structures. Supports internal slash commands like <code>/copy</code>, <code>/clear</code>, and <code>/exit</code> directly inside the prompt.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🛠️</div>
-                    <h3>Git Conventional Helper</h3>
-                    <p>Runs local diffs via subprocesses, generating conventional commits or Pull Request descriptions formatted in structured Markdown.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📚</div>
-                    <h3>Dynamic Cheatsheets</h3>
-                    <p>Retrieves structured cheatsheets dynamically from Gemini for LangChain, MLX, PyTorch, Pytest, Docker, and more, avoiding outdated templates.</p>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- macOS Dock Navigation -->
+    <!-- macOS Inspired Navigation Dock -->
     <nav class="dock-container">
-        <div class="dock">
+        <div class="dock" id="macos-dock">
+            <!-- Home Icon (App Style) -->
             <a href="#home" class="dock-item" data-title="Home">
-                <span class="dock-icon">🏠</span>
+                <svg viewBox="0 0 64 64" class="dock-svg-icon">
+                    <defs>
+                        <linearGradient id="homeGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#38bdf8"/>
+                            <stop offset="100%" stop-color="#0284c7"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#homeGrad)"/>
+                    <path d="M32 16 L16 32 L22 32 L22 48 L42 48 L42 32 L48 32 Z" fill="#ffffff"/>
+                    <rect x="29" y="36" width="6" height="12" fill="#0284c7"/>
+                </svg>
+                <div class="indicator active"></div>
             </a>
-            <a href="#try" class="dock-item" data-title="Interactive CLI">
-                <span class="dock-icon">📟</span>
+            
+            <!-- Terminal Simulator Icon (App Style) -->
+            <a href="#try" class="dock-item" data-title="Terminal Simulator" id="dock-term-trigger">
+                <svg viewBox="0 0 64 64" class="dock-svg-icon">
+                    <defs>
+                        <linearGradient id="termGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#475569"/>
+                            <stop offset="100%" stop-color="#0f172a"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#termGrad)" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+                    <path d="M16 22 L24 28 L16 34" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <rect x="26" y="32" width="16" height="4" fill="#e2e8f0" rx="1"/>
+                </svg>
+                <div class="indicator active" id="term-indicator"></div>
             </a>
+
+            <!-- Features Icon (App Style) -->
             <a href="#features" class="dock-item" data-title="Features">
-                <span class="dock-icon">⚙️</span>
+                <svg viewBox="0 0 64 64" class="dock-svg-icon">
+                    <defs>
+                        <linearGradient id="featGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#c084fc"/>
+                            <stop offset="100%" stop-color="#7e22ce"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#featGrad)"/>
+                    <circle cx="32" cy="32" r="14" fill="none" stroke="#ffffff" stroke-width="4"/>
+                    <path d="M32 10 L32 18 M32 46 L32 54 M10 32 L18 32 M46 32 L54 32" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+                </svg>
             </a>
+
+            <!-- Separator Line -->
+            <div class="dock-separator"></div>
+
+            <!-- About This Mac App Icon -->
+            <button class="dock-item" data-title="About This Mac" id="dock-about-trigger">
+                <svg viewBox="0 0 64 64" class="dock-svg-icon">
+                    <defs>
+                        <linearGradient id="aboutGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#fb7185"/>
+                            <stop offset="100%" stop-color="#e11d48"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#aboutGrad)"/>
+                    <path d="M32 42 C24 42 20 36 20 30 C20 22 26 18 32 18 C38 18 44 22 44 30 C44 36 40 42 32 42 Z" fill="none" stroke="#ffffff" stroke-width="4"/>
+                    <circle cx="32" cy="30" r="4" fill="#ffffff"/>
+                </svg>
+                <div class="indicator" id="about-indicator"></div>
+            </button>
+
+            <!-- GitHub Repository Icon (App Style) -->
             <a href="https://github.com/Jyotiraditya21-bug/MAC-SPOT" target="_blank" class="dock-item" data-title="GitHub Repository">
-                <span class="dock-icon">🐙</span>
+                <svg viewBox="0 0 64 64" class="dock-svg-icon">
+                    <defs>
+                        <linearGradient id="gitGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#3f3f46"/>
+                            <stop offset="100%" stop-color="#18181b"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#gitGrad)"/>
+                    <path d="M32 12C20.96 12 12 20.96 12 32c0 8.83 5.73 16.32 13.67 18.96.99.19 1.35-.43 1.35-.95 0-.48-.02-2.07-.03-3.79-5.56 1.21-6.73-2.36-6.73-2.36-.91-2.31-2.22-2.92-2.22-2.92-1.81-1.24.14-1.21.14-1.21 2.01.14 3.07 2.06 3.07 2.06 1.78 3.05 4.68 2.17 5.82 1.66.18-1.29.7-2.17 1.27-2.67-4.44-.5-9.11-2.22-9.11-9.87 0-2.18.78-3.96 2.06-5.35-.2-.5-.89-2.54.2-5.28 0 0 1.68-.54 5.5 2.05 1.6-4.4 3.32-6.57 3.32-6.57.8 0 2.5 2.17 4.1 6.57 3.82-2.59 5.5-2.05 5.5-2.05 1.09 2.74.4 4.78.2 5.28 1.28 1.39 2.06 3.17 2.06 5.35 0 7.67-4.68 9.36-9.14 9.85.72.63 1.37 1.85 1.37 3.73 0 2.7-.02 4.87-.02 5.54 0 .53.36 1.15 1.36.95C46.28 48.31 52 40.82 52 32c0-11.04-8.96-20-20-20z" fill="#ffffff"/>
+                </svg>
             </a>
         </div>
     </nav>

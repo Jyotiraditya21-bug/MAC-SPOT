@@ -1,5 +1,37 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Copy to Clipboard Functionality
+    // --- 1. Menu Bar Clock ---
+    const timeDisplay = document.getElementById("time-display");
+    const updateClock = () => {
+        const now = new Date();
+        const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const day = days[now.getDay()];
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+        const ampm = hours >= 12 ? "PM" : "AM";
+        
+        hours = hours % 12;
+        hours = hours ? hours : 12; // Handle 0 as 12
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        
+        timeDisplay.innerText = `${day} ${hours}:${minutes} ${ampm}`;
+    };
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // --- 2. Apple Dropdown Menu Toggle ---
+    const appleBtn = document.getElementById("apple-logo-btn");
+    const appleDropdown = document.getElementById("apple-dropdown");
+
+    appleBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        appleDropdown.style.display = appleDropdown.style.display === "flex" ? "none" : "flex";
+    });
+
+    document.addEventListener("click", () => {
+        appleDropdown.style.display = "none";
+    });
+
+    // --- 3. Clipboard Copy for Install Command ---
     const copyBtn = document.getElementById("copy-btn");
     const installCmd = document.getElementById("install-cmd").innerText;
     const tooltip = copyBtn.querySelector(".tooltip");
@@ -11,15 +43,141 @@ document.addEventListener("DOMContentLoaded", () => {
                 tooltip.innerText = "Copy to Clipboard";
             }, 2000);
         }).catch(err => {
-            console.error("Could not copy text: ", err);
+            console.error("Could not copy link: ", err);
         });
     });
 
-    // 2. Terminal Interactive Simulation
+    // --- 4. macOS Window Dragging ---
+    const makeWindowDraggable = (windowEl, headerEl) => {
+        let startX = 0, startY = 0, currentX = 0, currentY = 0;
+
+        headerEl.addEventListener("mousedown", (e) => {
+            if (e.target.classList.contains("win-btn")) return;
+            e.preventDefault();
+            startX = e.clientX;
+            startY = e.clientY;
+
+            const dragMove = (moveEvent) => {
+                currentX = startX - moveEvent.clientX;
+                currentY = startY - moveEvent.clientY;
+                startX = moveEvent.clientX;
+                startY = moveEvent.clientY;
+
+                windowEl.style.top = `${windowEl.offsetTop - currentY}px`;
+                windowEl.style.left = `${windowEl.offsetLeft - currentX}px`;
+            };
+
+            const dragEnd = () => {
+                document.removeEventListener("mousemove", dragMove);
+                document.removeEventListener("mouseup", dragEnd);
+            };
+
+            document.addEventListener("mousemove", dragMove);
+            document.addEventListener("mouseup", dragEnd);
+
+            // Bring active window to focus depth
+            document.querySelectorAll(".mac-window").forEach(w => w.style.zIndex = 10);
+            windowEl.style.zIndex = 100;
+        });
+    };
+
+    makeWindowDraggable(document.getElementById("about-window"), document.getElementById("about-header"));
+    makeWindowDraggable(document.getElementById("terminal-window"), document.getElementById("terminal-header"));
+
+    // --- 5. About Window Dialog Triggers ---
+    const aboutWindow = document.getElementById("about-window");
+    const aboutCloseBtn = document.getElementById("about-close-btn");
+    const aboutTrigger = document.getElementById("about-trigger");
+    const dockAboutTrigger = document.getElementById("dock-about-trigger");
+    const aboutIndicator = document.getElementById("about-indicator");
+
+    const openAboutWindow = () => {
+        // Trigger bounce animation on Dock icon
+        dockAboutTrigger.classList.add("bounce");
+        setTimeout(() => {
+            dockAboutTrigger.classList.remove("bounce");
+            aboutWindow.style.display = "block";
+            aboutWindow.style.top = "120px";
+            aboutWindow.style.left = "100px";
+            aboutIndicator.classList.add("active");
+            aboutWindow.style.zIndex = 100;
+        }, 900);
+    };
+
+    aboutTrigger.addEventListener("click", openAboutWindow);
+    dockAboutTrigger.addEventListener("click", () => {
+        if (aboutWindow.style.display === "none") {
+            openAboutWindow();
+        } else {
+            aboutWindow.style.display = "none";
+            aboutIndicator.classList.remove("active");
+        }
+    });
+
+    aboutCloseBtn.addEventListener("click", () => {
+        aboutWindow.style.display = "none";
+        aboutIndicator.classList.remove("active");
+    });
+
+    // --- 6. Terminal Window Hide/Show simulation ---
+    const termWindow = document.getElementById("terminal-window");
+    const termCloseBtn = document.getElementById("term-close-btn");
+    const dockTermTrigger = document.getElementById("dock-term-trigger");
+    const termIndicator = document.getElementById("term-indicator");
+
+    termCloseBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        termWindow.style.display = "none";
+        termIndicator.classList.remove("active");
+    });
+
+    dockTermTrigger.addEventListener("click", (e) => {
+        if (termWindow.style.display === "none") {
+            e.preventDefault();
+            dockTermTrigger.classList.add("bounce");
+            setTimeout(() => {
+                dockTermTrigger.classList.remove("bounce");
+                termWindow.style.display = "flex";
+                termIndicator.classList.add("active");
+                // Smooth scroll to Try section
+                document.getElementById("try").scrollIntoView({ behavior: "smooth" });
+            }, 900);
+        }
+    });
+
+    // --- 7. macOS Dock Mathematical Magnification ---
+    const dock = document.getElementById("macos-dock");
+    const dockItems = document.querySelectorAll("#macos-dock .dock-item");
+
+    dock.addEventListener("mousemove", (e) => {
+        const mouseX = e.clientX;
+        dockItems.forEach(item => {
+            const rect = item.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const dist = Math.abs(mouseX - centerX);
+            
+            const maxDist = 180; // Distance of magnification effect
+            let scale = 1.0;
+            if (dist < maxDist) {
+                scale = 1.0 + (1.0 - dist / maxDist) * 0.45; // Smooth curve peaking at 1.45x
+            }
+            
+            item.style.width = `${48 * scale}px`;
+            item.style.height = `${48 * scale}px`;
+        });
+    });
+
+    dock.addEventListener("mouseleave", () => {
+        dockItems.forEach(item => {
+            item.style.width = "48px";
+            item.style.height = "48px";
+        });
+    });
+
+    // --- 8. Terminal Command Simulator logic ---
     const termBody = document.getElementById("terminal-body");
     const cmdButtons = document.querySelectorAll(".cmd-btn");
-    
-    // Command database
+
     const RESPONSES = {
         help: `
   ███╗   ███╗ █████╗  ██████╗      ███████╗██████╗  ██████╗ ████████╗
@@ -244,7 +402,7 @@ What are we building today?
                 termBody.appendChild(finalPromptLine);
                 termBody.scrollTop = termBody.scrollHeight;
             }
-        }, 40);
+        }, 30);
     };
 
     // Button event click handler

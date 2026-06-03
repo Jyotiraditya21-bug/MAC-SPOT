@@ -2,7 +2,7 @@
 
 Your AI-powered developer assistant in the terminal — powered by Gemini. Designed specifically for GenAI/ML engineers and developers on macOS.
 
-🌐 **Website & Simulator**: [Open macOS-Themed Landing Page](file:///Users/jimmycodes/MAC-SPOT/website/index.html)
+🌐 **Website & Simulator**: [jyotiraditya21-bug.github.io/MAC-SPOT](https://jyotiraditya21-bug.github.io/MAC-SPOT/)
 
 ---
 

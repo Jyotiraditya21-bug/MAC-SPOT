@@ -7,10 +7,10 @@
 }
 
 :root {
-    --bg-color: #080a10;
+    --bg-color: #0c0e17;
     --card-bg: rgba(255, 255, 255, 0.04);
     --card-border: rgba(255, 255, 255, 0.06);
-    --glass-bg: rgba(18, 20, 32, 0.65);
+    --glass-bg: rgba(20, 22, 38, 0.55);
     --glass-border: rgba(255, 255, 255, 0.08);
     --primary: #06b6d4; /* Cyan */
     --primary-glow: rgba(6, 182, 212, 0.15);
@@ -29,6 +29,100 @@ body {
     font-family: 'Outfit', sans-serif;
     overflow-x: hidden;
     line-height: 1.6;
+    height: 100vh;
+}
+
+/* macOS Top Menu Bar */
+.menubar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 26px;
+    background: rgba(12, 14, 23, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 10000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    font-size: 0.82rem;
+    font-weight: 400;
+    user-select: none;
+}
+
+.menu-left, .menu-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.menu-item {
+    cursor: default;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: background 0.15s;
+}
+
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.menu-item.bold {
+    font-weight: 600;
+}
+
+.menu-item.apple-logo {
+    font-size: 1rem;
+    padding: 0 6px 2px;
+}
+
+.menu-icon {
+    font-size: 0.85rem;
+    cursor: default;
+}
+
+/* Apple Dropdown Menu */
+.apple-dropdown {
+    position: absolute;
+    top: 28px;
+    left: 12px;
+    background: rgba(25, 27, 43, 0.85);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    width: 180px;
+    padding: 4px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    z-index: 10001;
+    display: none;
+    flex-direction: column;
+}
+
+.dropdown-item {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    text-align: left;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    cursor: default;
+    width: 100%;
+}
+
+.dropdown-item:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.dropdown-separator {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 4px 8px;
 }
 
 /* Background Glow Orbs */
@@ -38,7 +132,7 @@ body {
     filter: blur(150px);
     z-index: -1;
     pointer-events: none;
-    opacity: 0.12;
+    opacity: 0.14;
     animation: pulse 12s infinite alternate;
 }
 
@@ -62,7 +156,7 @@ body {
 .orb-3 {
     width: 700px;
     height: 700px;
-    background: #3b82f6; /* Blue */
+    background: #3b82f6;
     bottom: -300px;
     left: 20%;
     animation-delay: 4s;
@@ -73,7 +167,14 @@ body {
     100% { transform: scale(1.15) translate(30px, 30px); }
 }
 
-/* Layout container */
+/* Desktop Workspace layout */
+.desktop-workspace {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 30px; /* Space for menubar */
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -82,23 +183,23 @@ body {
 
 /* Hero Section */
 .hero {
-    min-height: 85vh;
+    min-height: 80vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 100px 0 60px;
+    padding: 60px 0;
 }
 
 .badge {
-    background: rgba(6, 182, 212, 0.1);
-    border: 1px solid rgba(6, 182, 212, 0.2);
+    background: rgba(6, 182, 212, 0.15);
+    border: 1px solid rgba(6, 182, 212, 0.25);
     color: var(--primary);
     padding: 6px 14px;
     border-radius: 30px;
     font-weight: 500;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin-bottom: 24px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -117,7 +218,7 @@ body {
 }
 
 .subtitle {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     color: var(--text-muted);
     max-width: 650px;
     font-weight: 300;
@@ -147,7 +248,7 @@ body {
 
 .install-card code {
     font-family: 'Fira Code', monospace;
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: #e2e8f0;
     white-space: nowrap;
     overflow-x: auto;
@@ -200,6 +301,121 @@ body {
     color: var(--text-muted);
 }
 
+/* macOS Windows Framework */
+.mac-window {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border-radius: 12px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+    z-index: 10;
+}
+
+.window-header {
+    background: rgba(18, 20, 32, 0.6);
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: move; /* Drag handle indicator */
+}
+
+.window-buttons {
+    display: flex;
+    gap: 8px;
+    z-index: 5;
+}
+
+.win-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+}
+
+.win-btn.close { background: var(--error); }
+.win-btn.minimize { background: var(--warning); }
+.win-btn.expand { background: var(--success); }
+
+/* Show symbol icons inside window controls on hover */
+.window-header:hover .win-btn::before {
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.55);
+}
+.window-header:hover .win-btn.close::before { content: '×'; }
+.window-header:hover .win-btn.minimize::before { content: '–'; }
+.window-header:hover .win-btn.expand::before { content: '+'; }
+
+.window-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* About This Mac Modal Window layout */
+#about-window {
+    position: fixed;
+    width: 440px;
+    height: 230px;
+    z-index: 999;
+}
+
+.about-body {
+    padding: 24px;
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    height: calc(100% - 37px);
+}
+
+.mac-display-graphic {
+    flex-shrink: 0;
+}
+
+.mac-specs h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 2px;
+}
+
+.specs-version {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.specs-separator {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin-bottom: 12px;
+}
+
+.spec-line {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+    color: #e2e8f0;
+}
+
+.spec-line strong {
+    display: inline-block;
+    width: 95px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
 /* Terminal Section */
 .terminal-section {
     padding: 80px 0;
@@ -222,18 +438,14 @@ body {
     font-weight: 300;
 }
 
-/* Terminal Container & Layout */
 .terminal-container {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    border-radius: 24px;
     display: grid;
     grid-template-columns: 280px 1fr;
     height: 520px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255,255,255,0.15);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
 }
 
 /* Sidebar List */
@@ -315,48 +527,17 @@ body {
     color: #c084fc;
 }
 
-/* Terminal Window */
-.terminal-window {
+/* Terminal Window specific styling */
+#terminal-window {
     display: flex;
     flex-direction: column;
     height: 100%;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    background: none;
 }
 
-.terminal-header {
-    background: rgba(15, 17, 28, 0.5);
-    padding: 14px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-
-.window-buttons {
-    display: flex;
-    gap: 8px;
-}
-
-.win-btn {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-.win-btn.close { background: var(--error); }
-.win-btn.minimize { background: var(--warning); }
-.win-btn.expand { background: var(--success); }
-
-.window-title {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    font-family: 'Outfit', sans-serif;
-}
-
-/* Terminal Screen Content */
 .terminal-body {
     flex: 1;
     padding: 24px;
@@ -462,14 +643,17 @@ body {
     font-weight: 300;
 }
 
-/* macOS Navigation Dock */
+/* macOS Inspired Navigation Dock */
 .dock-container {
     position: fixed;
-    bottom: 30px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
-    pointer-events: none; /* Let clicks pass outside the dock */
+    pointer-events: none;
+    height: 76px;
+    display: flex;
+    align-items: flex-end;
 }
 
 .dock {
@@ -478,12 +662,14 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(35px) saturate(200%);
     -webkit-backdrop-filter: blur(35px) saturate(200%);
-    padding: 8px 12px;
-    border-radius: 24px;
+    padding: 4px 8px 12px;
+    border-radius: 22px;
     gap: 12px;
     align-items: flex-end;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.06);
-    pointer-events: auto; /* Enable clicks inside the dock */
+    pointer-events: auto;
+    height: 64px;
+    transition: padding 0.1s ease;
 }
 
 .dock-item {
@@ -491,30 +677,62 @@ body {
     width: 48px;
     height: 48px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: none;
+    border: none;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     text-decoration: none;
-    transition: width 0.2s, height 0.2s, margin 0.2s, background 0.2s;
-    cursor: pointer;
+    cursor: default;
+    transition: width 0.1s ease, height 0.1s ease;
+    transform-origin: bottom;
+    padding: 0;
 }
 
-.dock-item:hover {
+.dock-svg-icon {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.1s ease;
+}
+
+/* Active Running App Dot Indicator */
+.indicator {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    position: absolute;
+    bottom: -8px;
+    opacity: 0;
+    transition: opacity 0.2s, background-color 0.2s;
+}
+
+.indicator.active {
+    opacity: 1;
+    background: var(--text-main);
+    box-shadow: 0 0 4px white;
+}
+
+/* Dock Separator Line */
+.dock-separator {
+    width: 1px;
+    height: 40px;
     background: rgba(255, 255, 255, 0.12);
-    width: 60px;
-    height: 60px;
-    margin: 0 4px -6px; /* Offset to keep bottom aligned */
+    align-self: center;
+    margin: 0 4px;
 }
 
-.dock-icon {
-    font-size: 1.6rem;
-    transition: font-size 0.2s;
+/* Bouncing Dock Animation */
+@keyframes dockBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-24px); }
 }
 
-.dock-item:hover .dock-icon {
-    font-size: 2.2rem;
+.bounce {
+    animation: dockBounce 0.45s ease 2;
 }
 
 /* Tooltip on Dock Item */
@@ -534,6 +752,7 @@ body {
     pointer-events: none;
     transition: opacity 0.15s ease-out;
     border: 1px solid rgba(255,255,255,0.08);
+    font-family: 'Outfit', sans-serif;
 }
 
 .dock-item:hover::after {
@@ -552,6 +771,11 @@ body {
         border-bottom: 1px solid var(--glass-border);
         max-height: 180px;
         overflow-y: auto;
+    }
+    
+    #about-window {
+        width: 90%;
+        left: 5% !important;
     }
 }
 
