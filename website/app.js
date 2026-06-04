@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const installNote = document.querySelector(".install-note");
 
     const MACOS_CMD = "curl -sL https://tinyurl.com/289km8xg | bash";
-    const WINDOWS_CMD = "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Jyotiraditya21-bug/MAC-SPOT/main/install.ps1'))";
+    const WINDOWS_CMD = "Set-ExecutionPolicy Bypass -Scope Process -Force; irm https://raw.githubusercontent.com/Jyotiraditya21-bug/MAC-SPOT/main/install.ps1 | iex";
 
     tabMacos.addEventListener("click", () => {
         tabMacos.classList.add("active");

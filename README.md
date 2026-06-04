@@ -54,7 +54,7 @@ mac-spot setup
 You can install `mac-spot` globally on Windows via PowerShell with a single command:
 
 ```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Jyotiraditya21-bug/MAC-SPOT/main/install.ps1'))
+Set-ExecutionPolicy Bypass -Scope Process -Force; irm https://raw.githubusercontent.com/Jyotiraditya21-bug/MAC-SPOT/main/install.ps1 | iex
 ```
 
 Once the installation finishes, reload your PowerShell profile and configure your API key:
