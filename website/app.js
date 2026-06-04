@@ -31,13 +31,34 @@ document.addEventListener("DOMContentLoaded", () => {
         appleDropdown.style.display = "none";
     });
 
-    // --- 3. Clipboard Copy for Install Command ---
+    // --- 3. Install Command Tabs & Clipboard Copy ---
+    const tabMacos = document.getElementById("tab-macos");
+    const tabWindows = document.getElementById("tab-windows");
+    const installCmdEl = document.getElementById("install-cmd");
     const copyBtn = document.getElementById("copy-btn");
-    const installCmd = document.getElementById("install-cmd").innerText;
     const tooltip = copyBtn.querySelector(".tooltip");
+    const installNote = document.querySelector(".install-note");
+
+    const MACOS_CMD = "curl -sL https://tinyurl.com/289km8xg | bash";
+    const WINDOWS_CMD = "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Jyotiraditya21-bug/MAC-SPOT/main/install.ps1'))";
+
+    tabMacos.addEventListener("click", () => {
+        tabMacos.classList.add("active");
+        tabWindows.classList.remove("active");
+        installCmdEl.innerText = MACOS_CMD;
+        installNote.innerText = "Runs globally in Zsh/Bash. Configures short aliases automatically.";
+    });
+
+    tabWindows.addEventListener("click", () => {
+        tabWindows.classList.add("active");
+        tabMacos.classList.remove("active");
+        installCmdEl.innerText = WINDOWS_CMD;
+        installNote.innerText = "Runs in PowerShell. Registers global functions in your profile.";
+    });
 
     copyBtn.addEventListener("click", () => {
-        navigator.clipboard.writeText(installCmd).then(() => {
+        const textToCopy = installCmdEl.innerText;
+        navigator.clipboard.writeText(textToCopy).then(() => {
             tooltip.innerText = "Copied!";
             setTimeout(() => {
                 tooltip.innerText = "Copy to Clipboard";
