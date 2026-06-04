@@ -66,6 +66,41 @@ def get_linux_distro() -> str:
         pass
     return f"Linux {platform.release()}"
 
+def get_windows_cpu_info() -> str:
+    """Read CPU brand string on Windows using winreg or platform."""
+    try:
+        import winreg
+        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"HARDWARE\DESCRIPTION\System\CentralProcessor\0")
+        brand, _ = winreg.QueryValueEx(key, "ProcessorNameString")
+        winreg.CloseKey(key)
+        return brand.strip()
+    except Exception:
+        return platform.processor() or "Unknown Windows CPU"
+
+def get_windows_memory() -> int:
+    """Read total memory size in bytes on Windows using ctypes."""
+    try:
+        import ctypes
+        class MEMORYSTATUSEX(ctypes.Structure):
+            _fields_ = [
+                ("dwLength", ctypes.c_ulong),
+                ("dwMemoryLoad", ctypes.c_ulong),
+                ("ullTotalPhys", ctypes.c_ulonglong),
+                ("ullAvailPhys", ctypes.c_ulonglong),
+                ("ullTotalPageFile", ctypes.c_ulonglong),
+                ("ullAvailPageFile", ctypes.c_ulonglong),
+                ("ullTotalVirtual", ctypes.c_ulonglong),
+                ("ullAvailVirtual", ctypes.c_ulonglong),
+                ("ullAvailExtendedVirtual", ctypes.c_ulonglong),
+            ]
+        stat = MEMORYSTATUSEX()
+        stat.dwLength = ctypes.sizeof(stat)
+        if ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat)):
+            return stat.ullTotalPhys
+    except Exception:
+        pass
+    return 0
+
 def mac_command(
     topic: Optional[str] = typer.Argument(
         None, 
@@ -79,13 +114,9 @@ def mac_command(
     )
 ) -> None:
     """Hardware-aware OS optimizer: analyzes your specs to output model compatibility, quant, thread, and memory guidelines."""
-    # 1. Check OS and block Windows
+    # 1. Check OS
     system = platform.system()
-    if system == "Windows":
-        print_error("upgrade to mac :)")
-        raise typer.Exit(code=1)
-    
-    if system not in ("Darwin", "Linux"):
+    if system not in ("Darwin", "Linux", "Windows"):
         print_error(f"Unsupported OS: {system}")
         raise typer.Exit(code=1)
 
@@ -99,11 +130,20 @@ def mac_command(
             mem_gb = int(mem_bytes) // (1024 ** 3)
         except ValueError:
             mem_gb = "Unknown"
-    else:  # Linux
+    elif system == "Linux":
         chip = get_linux_cpu_info()
         mem_bytes = get_linux_memory()
         cores = os.cpu_count() or "Unknown"
         os_ver = get_linux_distro()
+        try:
+            mem_gb = int(mem_bytes) // (1024 ** 3) if mem_bytes > 0 else "Unknown"
+        except Exception:
+            mem_gb = "Unknown"
+    else:  # Windows
+        chip = get_windows_cpu_info()
+        mem_bytes = get_windows_memory()
+        cores = os.cpu_count() or "Unknown"
+        os_ver = f"Windows {platform.release()} (Build {platform.version()})"
         try:
             mem_gb = int(mem_bytes) // (1024 ** 3) if mem_bytes > 0 else "Unknown"
         except Exception:
@@ -126,7 +166,7 @@ def mac_command(
             f"1. **Quantization Sizing Table**: Show RAM requirements for FP16, Q8_0, Q4_K_M (or similar) quantizations.\n"
             f"2. **Fit Assessment**: Detail if it fits comfortably within my {mem_gb} GB memory, keeping in mind system overhead.\n"
             f"3. **Recommended Engine & Config**: Give optimal commands for Ollama, llama.cpp, or MLX (macOS only), and specify the exact thread count matching my {cores} cores.\n"
-            f"4. **Performance Outlook**: Expected speeds and performance expectations on this platform."
+            f"4. **Performance Outlook**: Expected speeds and performance expectations on this platform. (If OS is Windows, warn that MLX/Metal features are unavailable, and suggest CUDA/DirectML or CPU alternatives)."
         )
     elif topic:
         title = f"Hardware Optimization: {topic}"
@@ -134,22 +174,25 @@ def mac_command(
             f"Provide advanced hardware-specific optimization instructions for '{topic}' given this hardware profile:\n"
             f"{hardware_profile}\n\n"
             f"Provide your advice in Markdown containing:\n"
-            f"1. **Hardware/Memory Acceleration**: How to leverage GPU acceleration (MPS/Metal for macOS, CUDA/ROCm for Linux) or memory configurations.\n"
+            f"1. **Hardware/Memory Acceleration**: How to leverage GPU acceleration (MPS/Metal for macOS, CUDA/ROCm for Linux, CUDA/DirectML/Vulkan for Windows) or memory configurations.\n"
             f"2. **Optimal Compilation/Build Instructions**: Exact command lines, flags, or configuration variables.\n"
-            f"3. **Platform Gotchas**: Core pitfalls (e.g. thrashing, thermal throttling, allocation limits, OOM killer) and fixes."
+            f"3. **Platform Gotchas**: Core pitfalls (e.g. thrashing, thermal throttling, allocation limits, OOM killer, Windows memory compression) and fixes."
         )
     else:
         title = f"{system} Local AI Optimization Dashboard"
+        if system == "Windows":
+            title += " (Limited Features)"
+        
         user_prompt = (
             f"Generate a customized local AI/ML optimization dashboard based on my hardware profile:\n"
             f"{hardware_profile}\n\n"
             f"Structure your response in Markdown with the following sections:\n"
             f"1. **Hardware Capability Analysis & Model Compatibility**: Critique my {chip} + {mem_gb} GB RAM for hosting model weights and training. "
-            f"Explicitly list compatible local models (e.g., 1.5B, 3B, 8B, 14B, 32B, 70B, etc. at Q4/Q8/FP16) that fit comfortably within my system specs.\n"
-            f"2. **PyTorch GPU Configuration**: Code snippets to configure and test GPU acceleration backend ({'Metal Performance Shaders (MPS)' if system == 'Darwin' else 'CUDA or ROCm'} depending on system type).\n"
-            f"3. **Local Deployment Setup**: Code/terminal examples showing how to run native engines ({'Apple MLX / Ollama' if system == 'Darwin' else 'vLLM / Ollama'} depending on system type).\n"
-            f"4. **Llama.cpp Compilation**: Build steps targeting GPU acceleration ({'Metal' if system == 'Darwin' else 'CUDA/ROCm'} depending on system type) and optimal `-t` thread allocation for {cores} CPU cores.\n"
-            f"5. **Environment Controls**: Essential environment variables (e.g., {'`PYTORCH_ENABLE_MPS_FALLBACK`' if system == 'Darwin' else '`CUDA_VISIBLE_DEVICES` or ROCm variables'}) to prevent context overflows."
+            f"Explicitly list compatible local models (e.g., 1.5B, 3B, 8B, 14B, etc. at Q4/Q8/FP16) that fit comfortably within my system specs.\n"
+            f"2. **PyTorch GPU Configuration**: Code snippets to configure and test GPU acceleration backend ({'Metal Performance Shaders (MPS)' if system == 'Darwin' else ('CUDA or DirectML' if system == 'Windows' else 'CUDA or ROCm')} depending on system type).\n"
+            f"3. **Local Deployment Setup**: Code/terminal examples showing how to run native engines ({'Apple MLX / Ollama' if system == 'Darwin' else 'Ollama / Llama.cpp'} depending on system type).\n"
+            f"4. **Llama.cpp Compilation**: Build steps targeting GPU acceleration ({'Metal' if system == 'Darwin' else ('CUDA or Vulkan' if system == 'Windows' else 'CUDA/ROCm')} depending on system type) and optimal `-t` thread allocation for {cores} CPU cores.\n"
+            f"5. **Environment Controls**: Essential environment variables (e.g., {'`PYTORCH_ENABLE_MPS_FALLBACK`' if system == 'Darwin' else ('`CUDA_VISIBLE_DEVICES`' if system == 'Windows' else '`CUDA_VISIBLE_DEVICES` or ROCm variables')}) to prevent context overflows."
         )
 
     stream = generate_stream(system_prompt=SYSTEM_PROMPT, user_prompt=user_prompt)

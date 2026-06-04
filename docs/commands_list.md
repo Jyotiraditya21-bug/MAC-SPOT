@@ -97,7 +97,7 @@ Generates dynamic, structured developer cheatsheets for popular libraries, tools
 
 ### 10. `mac`
 Hardware-aware system optimizer. Profiles local specs to output optimization guidelines and suggest compatible local model sizes.
-* **Platform Support**: macOS and Linux only (Windows is blocked with a friendly "upgrade to mac :)" message).
+* **Platform Support**: macOS, Linux, and Windows (Windows runs with a limited feature set; Apple Silicon optimizations are disabled).
 * **Usage**: `mac-spot mac [TOPIC] [OPTIONS]`
 * **Arguments/Options**:
   * `[TOPIC]`: Optional framework to optimize (e.g. `mlx`, `pytorch`, `llama.cpp`, `ollama`).
