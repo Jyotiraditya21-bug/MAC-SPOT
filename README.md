@@ -29,6 +29,7 @@ Your AI-powered developer assistant in the terminal — powered by Gemini. Desig
 - **git**: Generates conventional commit messages, PR descriptions, or explains complex git changes from staged/unstaged changes.
 - **sheet**: Generates dynamic, structured cheatsheets for popular libraries and tools.
 - **mac**: Hardware-aware local optimizer. Automatically profiles your Apple Silicon chip, unified memory size, and CPU cores to generate memory sizing predictions (quantization fitting), run configs, and compilation guides.
+- **pipe**: Shell Pipeline Debugger & Explainer. Visualizes stdin/stdout data flows, alerts about safety/side effects, highlights macOS vs. Linux command compatibility gotchas, and recommends optimizations.
 
 ---
 
@@ -128,6 +129,12 @@ mac-spot mac --model llama-3-8b
 Generate custom compilation and MPS (Metal Performance Shaders) execution flags for a framework:
 ```bash
 mac-spot mac mlx
+```
+
+### 10. Shell Pipeline Debugger & Explainer
+Analyze, debug, and visualize complex Unix shell pipelines (specifically detecting macOS/BSD vs. Linux/GNU tool mismatches):
+```bash
+mac-spot pipe "ps aux | grep python | awk '{print \$2}' | xargs kill -9"
 ```
 
 ---

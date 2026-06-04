@@ -14,6 +14,7 @@ from mac_spot.commands.chat import chat_command
 from mac_spot.commands.git import git_command
 from mac_spot.commands.sheet import sheet_command
 from mac_spot.commands.mac import mac_command
+from mac_spot.commands.pipe import pipe_command
 
 BANNER = """\b
 [cyan]
@@ -68,6 +69,10 @@ def setup_command() -> None:
         print_error(f"Failed to configure setup: {e}")
         raise typer.Exit(code=1)
 
+def about_command() -> None:
+    """Display builder and owner information for MAC-SPOT."""
+    console.print("[cyan]🛠️  Built by [bold]Jyotiraditya[/bold] (GitHub: [bold]@Jyotiraditya21-bug[/bold]) | Powered by Google Gemini[/cyan]")
+
 # Register command handlers from modular command files
 app.command(name="explain")(explain_command)
 app.command(name="review")(review_command)
@@ -77,6 +82,10 @@ app.command(name="chat")(chat_command)
 app.command(name="git")(git_command)
 app.command(name="sheet")(sheet_command)
 app.command(name="mac")(mac_command)
+app.command(name="pipe")(pipe_command)
+app.command(name="about")(about_command)
+app.command(name="owner")(about_command)
+app.command(name="builder")(about_command)
 
 if __name__ == "__main__":
     app()

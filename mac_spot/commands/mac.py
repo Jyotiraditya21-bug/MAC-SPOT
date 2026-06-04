@@ -1,9 +1,11 @@
+import os
+import platform
 import subprocess
 from typing import Optional
 import typer
 
 from mac_spot.gemini_client import generate_stream, SYSTEM_PROMPT
-from mac_spot.output import stream_output_panel
+from mac_spot.output import stream_output_panel, print_error
 
 def get_sysctl_value(param: str) -> str:
     """Run sysctl to read hardware specs from macOS kernel."""
@@ -21,6 +23,49 @@ def get_macos_version() -> str:
     except Exception:
         return "Unknown"
 
+def get_linux_cpu_info() -> str:
+    """Read CPU model name from /proc/cpuinfo."""
+    try:
+        with open("/proc/cpuinfo", "r") as f:
+            for line in f:
+                if "model name" in line:
+                    return line.split(":", 1)[1].strip()
+    except Exception:
+        pass
+    return "Unknown Linux CPU"
+
+def get_linux_memory() -> int:
+    """Read total memory size in bytes from /proc/meminfo or os.sysconf."""
+    try:
+        pages = os.sysconf('SC_PHYS_PAGES')
+        page_size = os.sysconf('SC_PAGE_SIZE')
+        if pages > 0 and page_size > 0:
+            return pages * page_size
+    except Exception:
+        pass
+    
+    try:
+        with open("/proc/meminfo", "r") as f:
+            for line in f:
+                if "MemTotal" in line:
+                    parts = line.split()
+                    if len(parts) >= 2:
+                        return int(parts[1]) * 1024
+    except Exception:
+        pass
+    return 0
+
+def get_linux_distro() -> str:
+    """Read Linux distribution name from /etc/os-release."""
+    try:
+        with open("/etc/os-release", "r") as f:
+            for line in f:
+                if line.startswith("PRETTY_NAME="):
+                    return line.split("=", 1)[1].strip().strip('"')
+    except Exception:
+        pass
+    return f"Linux {platform.release()}"
+
 def mac_command(
     topic: Optional[str] = typer.Argument(
         None, 
@@ -33,24 +78,43 @@ def mac_command(
         help="Optional local LLM/VLM name to assess (e.g., llama-3-8b, phi-4, qwen-2.5-7b)."
     )
 ) -> None:
-    """Hardware-aware macOS optimizer: analyzes your Apple Silicon specs to output quant, thread, and memory guidelines."""
-    # 1. Profile host machine
-    chip = get_sysctl_value("machdep.cpu.brand_string")
-    mem_bytes = get_sysctl_value("hw.memsize")
-    cores = get_sysctl_value("hw.ncpu")
-    os_ver = get_macos_version()
+    """Hardware-aware OS optimizer: analyzes your specs to output model compatibility, quant, thread, and memory guidelines."""
+    # 1. Check OS and block Windows
+    system = platform.system()
+    if system == "Windows":
+        print_error("upgrade to mac :)")
+        raise typer.Exit(code=1)
     
-    try:
-        mem_gb = int(mem_bytes) // (1024 ** 3)
-    except ValueError:
-        mem_gb = "Unknown"
+    if system not in ("Darwin", "Linux"):
+        print_error(f"Unsupported OS: {system}")
+        raise typer.Exit(code=1)
+
+    # 2. Profile host machine based on OS
+    if system == "Darwin":
+        chip = get_sysctl_value("machdep.cpu.brand_string")
+        mem_bytes = get_sysctl_value("hw.memsize")
+        cores = get_sysctl_value("hw.ncpu")
+        os_ver = f"macOS {get_macos_version()}"
+        try:
+            mem_gb = int(mem_bytes) // (1024 ** 3)
+        except ValueError:
+            mem_gb = "Unknown"
+    else:  # Linux
+        chip = get_linux_cpu_info()
+        mem_bytes = get_linux_memory()
+        cores = os.cpu_count() or "Unknown"
+        os_ver = get_linux_distro()
+        try:
+            mem_gb = int(mem_bytes) // (1024 ** 3) if mem_bytes > 0 else "Unknown"
+        except Exception:
+            mem_gb = "Unknown"
 
     hardware_profile = (
         f"Hardware Profile:\n"
+        f"- Operating System: {os_ver}\n"
         f"- Processor: {chip}\n"
-        f"- Unified Memory: {mem_gb} GB RAM\n"
+        f"- Memory: {mem_gb} GB RAM\n"
         f"- CPU Cores: {cores}\n"
-        f"- OS: macOS {os_ver}\n"
     )
 
     if model:
@@ -60,31 +124,32 @@ def mac_command(
             f"{hardware_profile}\n\n"
             f"Provide your analysis in Markdown containing:\n"
             f"1. **Quantization Sizing Table**: Show RAM requirements for FP16, Q8_0, Q4_K_M (or similar) quantizations.\n"
-            f"2. **Fit Assessment**: Detail if it fits comfortably within my {mem_gb} GB Unified Memory, keeping in mind system overhead.\n"
-            f"3. **Recommended Engine & Config**: Give optimal commands for Ollama, llama.cpp, or MLX, and specify the exact thread count `-t` matching my {cores} cores (to avoid utilizing efficiency cores unnecessarily).\n"
-            f"4. **Performance Outlook**: Expected speeds and performance expectations."
+            f"2. **Fit Assessment**: Detail if it fits comfortably within my {mem_gb} GB memory, keeping in mind system overhead.\n"
+            f"3. **Recommended Engine & Config**: Give optimal commands for Ollama, llama.cpp, or MLX (macOS only), and specify the exact thread count matching my {cores} cores.\n"
+            f"4. **Performance Outlook**: Expected speeds and performance expectations on this platform."
         )
     elif topic:
-        title = f"macOS Optimization: {topic}"
+        title = f"Hardware Optimization: {topic}"
         user_prompt = (
-            f"Provide advanced macOS-specific optimization instructions for '{topic}' given this hardware profile:\n"
+            f"Provide advanced hardware-specific optimization instructions for '{topic}' given this hardware profile:\n"
             f"{hardware_profile}\n\n"
             f"Provide your advice in Markdown containing:\n"
-            f"1. **Unified Memory & Metal Shaders Optimization**: How to leverage Metal GPU acceleration (MPS) or unified memory configurations.\n"
+            f"1. **Hardware/Memory Acceleration**: How to leverage GPU acceleration (MPS/Metal for macOS, CUDA/ROCm for Linux) or memory configurations.\n"
             f"2. **Optimal Compilation/Build Instructions**: Exact command lines, flags, or configuration variables.\n"
-            f"3. **macOS Gotchas**: Core pitfalls (e.g. thrashing, thermal throttling, allocation limits) and fixes."
+            f"3. **Platform Gotchas**: Core pitfalls (e.g. thrashing, thermal throttling, allocation limits, OOM killer) and fixes."
         )
     else:
-        title = "macOS Apple Silicon AI Dashboard"
+        title = f"{system} Local AI Optimization Dashboard"
         user_prompt = (
             f"Generate a customized local AI/ML optimization dashboard based on my hardware profile:\n"
             f"{hardware_profile}\n\n"
             f"Structure your response in Markdown with the following sections:\n"
-            f"1. **Hardware Capability Analysis**: Critique my {chip} + {mem_gb} GB Unified Memory for hosting model weights and training.\n"
-            f"2. **PyTorch MPS Configuration**: Python snippets to configure and test PyTorch Metal Performance Shaders backend.\n"
-            f"3. **Apple MLX Setup**: Code examples showing how to run MLX natively.\n"
-            f"4. **Llama.cpp Compilation**: Build steps targeting Metal and optimal `-t` thread allocation for {cores} CPU cores.\n"
-            f"5. **Environment Controls**: Essential environment variables (e.g., `PYTORCH_ENABLE_MPS_FALLBACK`, `GGML_METAL_PATH_RESOURCES`) to prevent context overflows."
+            f"1. **Hardware Capability Analysis & Model Compatibility**: Critique my {chip} + {mem_gb} GB RAM for hosting model weights and training. "
+            f"Explicitly list compatible local models (e.g., 1.5B, 3B, 8B, 14B, 32B, 70B, etc. at Q4/Q8/FP16) that fit comfortably within my system specs.\n"
+            f"2. **PyTorch GPU Configuration**: Code snippets to configure and test GPU acceleration backend ({'Metal Performance Shaders (MPS)' if system == 'Darwin' else 'CUDA or ROCm'} depending on system type).\n"
+            f"3. **Local Deployment Setup**: Code/terminal examples showing how to run native engines ({'Apple MLX / Ollama' if system == 'Darwin' else 'vLLM / Ollama'} depending on system type).\n"
+            f"4. **Llama.cpp Compilation**: Build steps targeting GPU acceleration ({'Metal' if system == 'Darwin' else 'CUDA/ROCm'} depending on system type) and optimal `-t` thread allocation for {cores} CPU cores.\n"
+            f"5. **Environment Controls**: Essential environment variables (e.g., {'`PYTORCH_ENABLE_MPS_FALLBACK`' if system == 'Darwin' else '`CUDA_VISIBLE_DEVICES` or ROCm variables'}) to prevent context overflows."
         )
 
     stream = generate_stream(system_prompt=SYSTEM_PROMPT, user_prompt=user_prompt)
