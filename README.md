@@ -50,11 +50,11 @@ source ~/.zshrc
 mac-spot setup
 ```
 
-### Windows (PowerShell)
-You can install `mac-spot` globally on Windows via PowerShell with a single command:
+### Windows (Command Prompt or PowerShell)
+You can install `mac-spot` globally on Windows with a single command run from either Command Prompt or PowerShell:
 
-```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; irm https://raw.githubusercontent.com/Jyotiraditya21-bug/MAC-SPOT/main/install.ps1 | iex
+```cmd
+powershell -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; irm https://raw.githubusercontent.com/Jyotiraditya21-bug/MAC-SPOT/main/install.ps1 | iex"
 ```
 
 Once the installation finishes, reload your PowerShell profile and configure your API key:

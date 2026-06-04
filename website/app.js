@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const installNote = document.querySelector(".install-note");
 
     const MACOS_CMD = "curl -sL https://tinyurl.com/289km8xg | bash";
-    const WINDOWS_CMD = "Set-ExecutionPolicy Bypass -Scope Process -Force; irm https://raw.githubusercontent.com/Jyotiraditya21-bug/MAC-SPOT/main/install.ps1 | iex";
+    const WINDOWS_CMD = "powershell -Command \"Set-ExecutionPolicy Bypass -Scope Process -Force; irm https://raw.githubusercontent.com/Jyotiraditya21-bug/MAC-SPOT/main/install.ps1 | iex\"";
 
     tabMacos.addEventListener("click", () => {
         tabMacos.classList.add("active");
